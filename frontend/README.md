@@ -1,16 +1,50 @@
-# React + Vite
+# Merchant Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend dashboard for the Payment Gateway. It allows merchants to log in, view their API credentials, and monitor transaction analytics.
 
-Currently, two official plugins are available:
+## ⚡ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Authentication**: Simple login flow for merchants.
+- **Analytics**: Real-time overview of total volume, transaction count, and success rates.
+- **Transaction History**: Detailed list of all payments with status badges (Success, Processing, Failed).
+- **API Access**: Displays the merchant's API Key and Secret for integration.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: [React](https://reactjs.org/) (via Vite)
+- **Styling**: Custom CSS (No external UI libraries)
+- **HTTP Client**: Axios
+- **Routing**: React Router DOM
 
-## Expanding the ESLint configuration
+## 💻 Local Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+If you want to run the frontend separately from Docker:
+
+1.  **Install Dependencies**:
+
+    ```bash
+    npm install
+    ```
+
+2.  **Start Dev Server**:
+
+    ```bash
+    npm run dev
+    ```
+
+    The app will run at `http://localhost:5173` (by default).
+
+    _Note: Ensure the backend API is running on port 8000 for data fetching to work._
+
+## 🐳 Docker Deployment
+
+In the main project setup, this dashboard is containerized and served via Nginx on port **3000**.
+
+- **URL**: [http://localhost:3000](http://localhost:3000)
+
+## 🔑 Test Credentials
+
+To log in and see the dashboard in action:
+
+- **Email**: `test@example.com`
+- **Password**: _(Any password)_
