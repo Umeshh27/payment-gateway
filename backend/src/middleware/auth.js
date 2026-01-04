@@ -1,6 +1,6 @@
 const db = require('../config/database');
 
-const authenticateHost = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
     const apiKey = req.header('X-Api-Key');
     const apiSecret = req.header('X-Api-Secret');
 
@@ -15,7 +15,7 @@ const authenticateHost = async (req, res, next) => {
 
     try {
         const result = await db.query(
-            'SELECT * FROM merchants WHERE api_key = $1 AND api_secret = $2',
+            'SELECT * FROM merchants WHERE api_key = $1 AND api_secret = $2 AND is_active = true',
             [apiKey, apiSecret]
         );
 
@@ -28,17 +28,18 @@ const authenticateHost = async (req, res, next) => {
             });
         }
 
+        // Attach merchant to request object
         req.merchant = result.rows[0];
         next();
     } catch (err) {
-        console.error('Auth error:', err);
-        res.status(500).json({
+        console.error('Authentication error:', err);
+        return res.status(500).json({
             error: {
                 code: 'INTERNAL_SERVER_ERROR',
-                description: 'Internal server error'
+                description: 'An unexpected error occurred'
             }
         });
     }
 };
 
-module.exports = authenticateHost;
+module.exports = authenticate;
