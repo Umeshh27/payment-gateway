@@ -71,17 +71,82 @@ Try paying!
 - **UPI**: `anything@upi` works.
 - **Card**: Google a "valid test credit card number" (Luhn valid) or just use `4242 4242 4242 4242` until it passes validation.
 
+## 💾 Database Schema
+
+Here is how the data is structured in PostgreSQL.
+
+### Merchants
+
+| Column       | Type    | Description   |
+| :----------- | :------ | :------------ |
+| `id`         | UUID    | Primary Key   |
+| `name`       | VARCHAR | Merchant Name |
+| `email`      | VARCHAR | Unique Email  |
+| `api_key`    | VARCHAR | Auth Key      |
+| `api_secret` | VARCHAR | Auth Secret   |
+
+### Orders
+
+| Column        | Type    | Description         |
+| :------------ | :------ | :------------------ |
+| `id`          | VARCHAR | `order_` + 16 chars |
+| `merchant_id` | UUID    | Foreign Key         |
+| `amount`      | INTEGER | Amount in paise     |
+| `status`      | VARCHAR | created, paid, etc. |
+
+### Payments
+
+| Column     | Type    | Description                 |
+| :--------- | :------ | :-------------------------- |
+| `id`       | VARCHAR | `pay_` + 16 chars           |
+| `order_id` | VARCHAR | Linked Order                |
+| `method`   | VARCHAR | upi / card                  |
+| `status`   | VARCHAR | processing, success, failed |
+
+## 🔌 API Reference
+
+| Method | Endpoint               | Description         | Auth |
+| :----- | :--------------------- | :------------------ | :--- |
+| `GET`  | `/health`              | System health check | No   |
+| `POST` | `/api/v1/orders`       | Create a new order  | Yes  |
+| `GET`  | `/api/v1/orders/:id`   | Get order details   | Yes  |
+| `POST` | `/api/v1/payments`     | Process payment     | Yes  |
+| `GET`  | `/api/v1/payments/:id` | Get payment status  | Yes  |
+
+## 📂 Project Structure
+
+```bash
+payment-gateway/
+├── backend/
+│   ├── src/
+│   │   ├── config/         # DB Connection
+│   │   ├── controllers/    # Route Logic
+│   │   ├── middleware/     # Auth Logic
+│   │   ├── routes/         # API Definitions
+│   │   ├── utils/          # Validation & Helpers
+│   │   ├── app.js          # Express App
+│   │   └── schema.sql      # Database Setup
+│   ├── Dockerfile
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── pages/          # Dashboard, Login, Transactions
+│   │   └── App.jsx         # Routing
+│   ├── Dockerfile
+│   └── index.html
+├── checkout-page/
+│   ├── src/
+│   │   ├── pages/          # Checkout UI
+│   │   └── App.jsx
+│   ├── Dockerfile
+│   └── index.html
+├── docker-compose.yml      # Service Orchestration
+└── README.md
+```
+
 ## Tech Stack
 
 - **Backend**: Node.js & Express
 - **Database**: Postgres (schema auto-migrates on startup)
 - **Frontend**: React + Vite (Custom CSS, no massive libraries)
 - **DevOps**: Docker & Docker Compose
-
-## Project Structure
-
-- `/backend`: The API logic.
-- `/frontend`: The merchant dashboard.
-- `/checkout-page`: The standalone payment page.
-
-That's it! Let me know if you run into any issues. 🚀
