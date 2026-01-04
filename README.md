@@ -1,69 +1,52 @@
-# Payment Gateway
+# Payment Gateway Project
 
-A robust, dockerized payment gateway simulation supporting Merchant Onboarding, Order Management, and multi-method payment processing (UPI & Cards). Built with Node.js, React, and PostgreSQL.
+Hey! 👋 This is a payment gateway simulation I built to understand how systems like Stripe or Razorpay work under the hood. It handles merchant onboarding, creating orders, and processing payments using UPI and Cards.
 
-## 🚀 Features
+It's a full-stack implementation—backend, frontend dashboard, and a checkout page—all containerized with Docker so you can spin it up with a single command.
 
--   **Merchant Dashboard**: View transactions, analytics, and manage API credentials.
--   **Hosted Checkout Page**: A secure, professional interface for customers to complete payments.
--   **RESTful API**: Comprehensive endpoints for creating orders and processing payments.
--   **Multi-Method Support**:
-    -   **UPI**: Validates VPA formats.
-    -   **Credit/Debit Cards**: Luhn algorithm validation, automatic network detection (Visa, Mastercard, RuPay), and secure handling.
--   **Security**: API Key & Secret authentication for all merchant operations.
--   **Simulation**: Realistic processing delays and success/failure scenarios for testing.
--   **Docker Ready**: One-command deployment for the entire stack.
+## What's Inside?
 
-## 🛠️ Tech Stack
+- **Merchant Dashboard**: A place for merchants to log in, see their API keys, and track transaction stats (Volume, Success Rate, etc.).
+- **Checkout Page**: A hosted page where the actual "payment" happens. It mimics a real payment flow including processing delays and success/failure screens.
+- **The Core API**: Built with Node.js & Express. It handles the heavy lifting:
+  - Validating UPI IDs (regex checks).
+  - Validating Card numbers (Luhn algorithm!).
+  - Auto-detecting card networks (Visa, Mastercard, etc.).
+  - Securely handling API keys.
 
--   **Backend**: Node.js, Express.js
--   **Database**: PostgreSQL
--   **Frontend**: React (Vite) for Dashboard and Checkout
--   **Containerization**: Docker & Docker Compose
+## Quick Start
 
-## 📋 Prerequisites
+I've set this up to be super easy to run. You just need **Docker** installed.
 
--   [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+1.  **Clone this repo**:
 
-## 🏁 Getting Started
-
-1.  **Clone the Repository** (if not already done)
     ```bash
     git clone <repository-url>
     cd payment-gateway
     ```
 
-2.  **Environment Configuration**
-    A `.env` file has been automatically generated from `.env.example`. You can customize it if needed, but the defaults work out of the box.
-
-3.  **Start the Application**
-    Run the following command to build and start all services:
+2.  **Run it**:
     ```bash
     docker-compose up --build
     ```
-    *Wait for the logs to indicate that the server is running on port 8000.*
+    Give it a minute. You'll know it's ready when you see `Server running on port 8000` in the logs.
 
-## 🔌 Architecture
+## How to Test It
 
-The project creates 4 containers:
+Here's a quick walkthrough to save you time guessing how things work.
 
-| Service | URL | Description |
-| :--- | :--- | :--- |
-| **API** | `http://localhost:8000` | Core backend logic & database interaction |
-| **Postgres** | `localhost:5432` | Relational database persistence |
-| **Dashboard** | `http://localhost:3000` | Merchant UI for analytics & logs |
-| **Checkout** | `http://localhost:3001` | Customer-facing payment page |
+### 1. Log in as a Merchant
 
-## 🧪 Testing & Usage
+Go to [http://localhost:3000](http://localhost:3000).
 
-### 1. Merchant Login
--   **URL**: [http://localhost:3000/login](http://localhost:3000/login)
--   **Email**: `test@example.com`
--   **Password**: *(Any password)*
--   **Note**: A test merchant is automatically seeded on startup.
+- **Email**: `test@example.com`
+- **Password**: literally anything (it's a test account)
+- _The dashboard will show you your API Key and Secret._
 
-### 2. Create an Order (API)
-Use the API Key/Secret found in your dashboard to create an order.
+### 2. Create an Order
+
+Open your terminal and create an order (replace the keys if you want, but these come pre-seeded):
+
 ```bash
 curl -X POST http://localhost:8000/api/v1/orders \
   -H "Content-Type: application/json" \
@@ -71,33 +54,34 @@ curl -X POST http://localhost:8000/api/v1/orders \
   -H "X-Api-Secret: secret_test_xyz789" \
   -d '{
     "amount": 50000,
-    "currency": "INR",
-    "receipt": "order_rcpt_1"
+    "currency": "INR"
   }'
 ```
 
-### 3. Process Payment (Checkout)
--   Copy the `id` from the API response (e.g., `order_...`).
--   Visit: `http://localhost:3001/checkout?order_id=<YOUR_ORDER_ID>`
--   Complete the payment using UPI (`user@bank`) or Card (`5111...` for Mastercard).
+_Note: Amount is in paise (so 50000 = ₹500)._
 
-## 📚 API Reference
+### 3. Make the Payment
 
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/health` | System health check | No |
-| `POST` | `/api/v1/orders` | Create a new payment order | Yes |
-| `GET` | `/api/v1/orders/:id` | Fetch order details | Yes |
-| `POST` | `/api/v1/payments` | Process a payment (S2S) | Yes |
-| `GET` | `/api/v1/payments/:id` | Get payment status | Yes |
+Grab the `id` from the response (it starts with `order_...`).
+Open your browser to:
+`http://localhost:3001/checkout?order_id=YOUR_ORDER_ID_HERE`
 
-## 📂 Project Structure
+Try paying!
 
-```
-payment-gateway/
-├── backend/            # Express.js API
-├── frontend/           # React Dashboard
-├── checkout-page/      # React Checkout UI
-├── docker-compose.yml  # Orchestration
-└── README.md           # Documentation
-```
+- **UPI**: `anything@upi` works.
+- **Card**: Google a "valid test credit card number" (Luhn valid) or just use `4242 4242 4242 4242` until it passes validation.
+
+## Tech Stack
+
+- **Backend**: Node.js & Express
+- **Database**: Postgres (schema auto-migrates on startup)
+- **Frontend**: React + Vite (Custom CSS, no massive libraries)
+- **DevOps**: Docker & Docker Compose
+
+## Project Structure
+
+- `/backend`: The API logic.
+- `/frontend`: The merchant dashboard.
+- `/checkout-page`: The standalone payment page.
+
+That's it! Let me know if you run into any issues. 🚀
