@@ -78,6 +78,10 @@ const Dashboard = () => {
                             <span className="text-muted">Key:</span>
                             <code data-test-id="api-key" style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{creds.apiKey}</code>
                         </div>
+                        <div className="card" style={{ padding: '0.5rem 1rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <span className="text-muted">Secret:</span>
+                            <code data-test-id="api-secret" style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{creds.apiSecret}</code>
+                        </div>
                     </div>
                 </div>
 
